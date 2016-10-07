@@ -25,10 +25,7 @@ public class BatteryHandler {
 	}
 
 	public static ItemStack givePower(ItemStack stack, long power) {
-		if(stack.getTagCompound() == null)
-			stack.setTagCompound(new NBTTagCompound());
-		stack.getTagCompound().setLong("power", getStoredPower(stack) + power);
-		return stack;
+		return setPower(stack, getStoredPower(stack) + power);
 	}
 
 	public static boolean isBattery(ItemStack stack) {
@@ -40,4 +37,12 @@ public class BatteryHandler {
 			return (ItemBattery) stack.getItem();
 		return null;
 	}
+
+	public static ItemStack setPower(ItemStack stack, long power) {
+		if (stack.getTagCompound() == null)
+			stack.setTagCompound(new NBTTagCompound());
+		stack.getTagCompound().setLong("power", power);
+		return stack;
+	}
+
 }
