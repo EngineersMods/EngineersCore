@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = EngineersCore.MODID)
 public class EngineersCore {
-	public static final String MODID = "engineers-core";
+	public static final String MODID = "engineerscore";
 
 	@Mod.Instance(MODID)
 	public static EngineersCore instance;
@@ -31,5 +31,9 @@ public class EngineersCore {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit();
+	}
+	
+	public static String appendID(String input){
+		return String.format("%s:%s", MODID, input);
 	}
 }

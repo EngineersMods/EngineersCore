@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
+import engineers.core.power.BatteryHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -21,15 +23,36 @@ import net.minecraft.util.text.TextComponentTranslation;
 public class TileCharger extends TileEntity implements ITickable, IInventory {
 
 	private int power = 0;
+	private int maxPower = 64000;
+	public int getMaxPower() {
+		return maxPower;
+	}
+
 	private ItemStack[] itemStacks = new ItemStack[2];
 
 	@Override
 	public void update() {
+		ItemStack fuel = getStackInSlot(0);
+		if (fuel != null) {
+			int newPower = TileEntityFurnace.getItemBurnTime(fuel);
+			if (newPower + power <= maxPower) {
+				power += newPower;
+				decrStackSize(0, 1);
+			}
+		}
 
+		ItemStack battery = getStackInSlot(1);
+		if (battery != null) {
+			if (BatteryHandler.isBattery(battery)) {
+				int lostPower = (int) Math.min(BatteryHandler.getUnfilled(battery), power);
+				BatteryHandler.givePower(battery, lostPower);
+				power -= lostPower;
+			}
+		}
 	}
 
 	public double fractionOfPowerFull() {
-		double fraction = power / (double) (128 * 1000);
+		double fraction = power / (double) (64 * 1000);
 		return MathHelper.clamp_double(fraction, 0.0, 1.0);
 	}
 
@@ -268,6 +291,10 @@ public class TileCharger extends TileEntity implements ITickable, IInventory {
 	@Override
 	public int getFieldCount() {
 		return NUMBER_OF_FIELDS;
+	}
+
+	public int getPower() {
+		return power;
 	}
 
 	// -----------------------------------------------------------------------------------------------------------

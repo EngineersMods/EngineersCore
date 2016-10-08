@@ -7,8 +7,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemCoal;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -40,7 +40,6 @@ public class ContainerCharger extends Container {
 
 	public final int FUEL_SLOTS_COUNT = 1;
 	public final int BATTERY_SLOTS_COUNT = 1;
-	public final int FURNACE_SLOTS_COUNT = 2;
 
 	// slot index is the unique index for all slots in this container i.e. 0 -
 	// 35 for invPlayer then 36 - 49 for tileInventoryFurnace
@@ -56,7 +55,7 @@ public class ContainerCharger extends Container {
 		final int SLOT_X_SPACING = 18;
 		final int SLOT_Y_SPACING = 18;
 		final int HOTBAR_XPOS = 8;
-		final int HOTBAR_YPOS = 183;
+		final int HOTBAR_YPOS = 142;
 		// Add the players hotbar to the gui - the [xpos, ypos] location of each
 		// item
 		for (int x = 0; x < HOTBAR_SLOT_COUNT; x++) {
@@ -65,7 +64,7 @@ public class ContainerCharger extends Container {
 		}
 
 		final int PLAYER_INVENTORY_XPOS = 8;
-		final int PLAYER_INVENTORY_YPOS = 125;
+		final int PLAYER_INVENTORY_YPOS = 84;
 		// Add the rest of the players inventory to the gui
 		for (int y = 0; y < PLAYER_INVENTORY_ROW_COUNT; y++) {
 			for (int x = 0; x < PLAYER_INVENTORY_COLUMN_COUNT; x++) {
@@ -76,8 +75,8 @@ public class ContainerCharger extends Container {
 			}
 		}
 
-		final int FUEL_SLOTS_XPOS = 53;
-		final int FUEL_SLOTS_YPOS = 96;
+		final int FUEL_SLOTS_XPOS = 12;
+		final int FUEL_SLOTS_YPOS = 60;
 		// Add the tile fuel slots
 		for (int x = 0; x < FUEL_SLOTS_COUNT; x++) {
 			int slotNumber = x + FIRST_FUEL_SLOT_NUMBER;
@@ -85,13 +84,13 @@ public class ContainerCharger extends Container {
 					FUEL_SLOTS_YPOS));
 		}
 
-		final int INPUT_SLOTS_XPOS = 26;
-		final int INPUT_SLOTS_YPOS = 24;
+		final int BATTERY_SLOTS_XPOS = 80;
+		final int BATTERY_SLOTS_YPOS = 34;
 		// Add the tile input slots
 		for (int y = 0; y < BATTERY_SLOTS_COUNT; y++) {
 			int slotNumber = y + FIRST_INPUT_SLOT_NUMBER;
-			addSlotToContainer(new SlotBattery(tileInventoryFurnace, slotNumber, INPUT_SLOTS_XPOS,
-					INPUT_SLOTS_YPOS + SLOT_Y_SPACING * y));
+			addSlotToContainer(new SlotBattery(tileInventoryFurnace, slotNumber, BATTERY_SLOTS_XPOS,
+					BATTERY_SLOTS_YPOS + SLOT_Y_SPACING * y));
 		}
 	}
 
@@ -193,7 +192,7 @@ public class ContainerCharger extends Container {
 		// the given item into this slot
 		@Override
 		public boolean isItemValid(ItemStack stack) {
-			return stack.getItem() instanceof ItemCoal;
+			return TileEntityFurnace.isItemFuel(stack);
 		}
 	}
 

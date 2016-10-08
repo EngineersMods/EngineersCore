@@ -1,8 +1,10 @@
 package engineers.core.blocks.machines.charger;
 
 import java.awt.Color;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,8 +15,8 @@ import net.minecraft.util.ResourceLocation;
 public class GuiCharger extends GuiContainer {
 
 	// This is the resource location for the background image
-	private static final ResourceLocation texture = new ResourceLocation("engineers-core",
-			"textures/gui/batteryCharger.png");
+	private static final ResourceLocation texture = new ResourceLocation(
+			"engineerscore:textures/gui/charger.png");
 	private TileCharger tileEntity;
 
 	public GuiCharger(InventoryPlayer invPlayer, TileCharger tileInventoryFurnace) {
@@ -73,7 +75,7 @@ public class GuiCharger extends GuiContainer {
 		// text
 		if (isInRect(guiLeft + COOK_BAR_XPOS, guiTop + COOK_BAR_YPOS, COOK_BAR_WIDTH, COOK_BAR_HEIGHT, mouseX,
 				mouseY)) {
-			hoveringText.add("Progress:");
+			hoveringText.add(formatInt(tileEntity.getPower()) + "/" + formatInt(tileEntity.getMaxPower()));
 			int cookPercentage = (int) (tileEntity.fractionOfPowerFull() * 100);
 			hoveringText.add(cookPercentage + "%");
 		}
@@ -87,10 +89,30 @@ public class GuiCharger extends GuiContainer {
 		// Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		// GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
+		int k = (width - xSize) / 2;
+		int l = (height - ySize) / 2;
+		renderPowerBar(k, l);
 	}
 
 	// Returns true if the given x,y coordinates are within the given rectangle
 	public static boolean isInRect(int x, int y, int xSize, int ySize, int mouseX, int mouseY) {
 		return ((mouseX >= x && mouseX <= x + xSize) && (mouseY >= y && mouseY <= y + ySize));
+	}
+
+	public void renderPowerBar(int k, int l) {
+		// int power = tileEntity.getPower();
+		// double percent = tileEntity.fractionOfPowerFull();
+		// int top = 14;
+		// int bottom = top + 42;
+		// int height = (int) (top * percent);
+		// System.out.println(height);
+		// drawGradientRect(15, height, 25, bottom, Color.MAGENTA.getRGB(),
+		// Color.BLUE.getRGB());
+
+	}
+
+	public String formatInt(int _int) {
+		NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+		return numberFormat.format(_int);
 	}
 }
